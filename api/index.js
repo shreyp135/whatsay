@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth_routes.js';
+import cookieParser from 'cookie-parser';
 
 //env file config
 dotenv.config();
