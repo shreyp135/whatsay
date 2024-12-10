@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 //api routes
 app.use("/api/auth", authRoutes);
-
+app.use("/api/chatroom", chatroomRoutes);
 
 //server start
 app.listen(process.env.PORT, () => {
