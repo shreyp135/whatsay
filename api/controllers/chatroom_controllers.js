@@ -1,11 +1,8 @@
-import Chatroom from "../models/chatroom_model";
-import Message from "../models/message_model";
-import User from "../models/user_model";
-
+import Chatroom from "../models/chatroom_model.js";
 
 export const getChatrooms = async(req, res) => {
     try{
-        const chatrooms = await Chatroom.find
+        const chatrooms = await Chatroom.find();
         res.status(200).json({chatrooms});
     }catch(err){
         res.status(500).json({error: err});
@@ -44,3 +41,24 @@ export const deleteChatroom = async(req, res) => {
     }
 }
 
+export const muteChatroom = async(req, res) => {
+    const chatroomId = req.params.chatroomId;
+    try{
+        const chatroom = await Chatroom.findById(chatroomId);
+        chatroom.ismuted = !chatroom.ismuted;
+        await chatroom.save();
+        res.status(200).json({message: "Chatroom muted successfully"});
+    }catch(err){
+        res.status(500).json({error: err});
+    }
+}
+
+export const getChatroomInfo = async(req, res) => {
+    const chatroomId = req.params.chatroomId;
+    try{
+        const chatroom = await Chatroom.findById(chatroomId);
+        res.status(200).json({chatroom});
+    }catch(err){
+        res.status(500).json({error: err});
+    }
+}
