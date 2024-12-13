@@ -4,15 +4,18 @@ import User from '../models/user_model.js';
 
 
 export const signup = async(req, res) => {
-    const {name,username,email,password,role} = req.body;
+    const {username,email,password,role} = req.body;
 
     try{
         const newUser = new User;
-        newUser.name = name;
         newUser.username = username;
         newUser.email = email;
         newUser.password = await bcrypt.hash(password, 15);
-        newUser.role = role;
+        if (role)
+            newUser.role = role;
+        else 
+            newUser.role = "user";
+        newUser.isactive = true;
         await newUser.save();
         console.log("User saved to database");
         res.status(201).json({message: "User created successfully"});
@@ -23,10 +26,11 @@ export const signup = async(req, res) => {
 
 
 export const signin = async(req, res) => {
-    const {userid, password} = req.body;
+    const {username, password} = req.body;
+    console.log(username, password);
 
     try{
-        const currUser = await User.findOne({$or: [{email: userid}, {username: userid}]});
+        const currUser = await User.findOne({$or: [{email: username}, {username: username}]});
         if (!currUser) 
             return res.status(404).json({message: "User not found"});
         const isUser = await bcrypt.compare(password, currUser.password);

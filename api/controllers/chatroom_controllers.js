@@ -2,10 +2,34 @@ import Chatroom from "../models/chatroom_model.js";
 
 export const getChatrooms = async(req, res) => {
     try{
-        const chatrooms = await Chatroom.find();
-        res.status(200).json({chatrooms});
+        const user_id = req.user._id;
+        if (!user_id) {
+            user_id = null;
+        }
+        const chatRooms = await Chatroom.find({})
+        .populate('users', 'id username isactive') 
+        .populate('createdBy', 'id username'); 
+        
+        const activeChatRooms = [];
+        const dormantChatRooms = [];
+
+        for (const chatRoom of chatRooms) {
+            const isUserInRoom = chatRoom.users.some(user => user.id === user_id); 
+      
+            if (!isUserInRoom) {
+              const hasActiveUsers = chatRoom.users.some(user => user.isActive); 
+      
+              if (hasActiveUsers) {
+                activeChatRooms.push(chatRoom);
+              } else {
+                dormantChatRooms.push(chatRoom);
+              }
+            }
+          }     
+        res.status(200).json({activeChatRooms, dormantChatRooms}); 
+
     }catch(err){
-        res.status(500).json({error: err});
+        res.status(500).json({message:"Error getting all chatrooms",error: err});
     }
 };
 
@@ -58,6 +82,16 @@ export const getChatroomInfo = async(req, res) => {
     try{
         const chatroom = await Chatroom.findById(chatroomId);
         res.status(200).json({chatroom});
+    }catch(err){
+        res.status(500).json({error: err});
+    }
+}
+
+export const getUserChatrooms = async(req, res) => {
+    const userId = req.user._id;
+    try{
+        const chatrooms = await Chatroom.find({created_by: userId});
+        res.status(200).json({chatrooms});
     }catch(err){
         res.status(500).json({error: err});
     }

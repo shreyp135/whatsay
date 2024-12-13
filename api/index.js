@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import websocketHandler from './utils/websocket_handler.js';
+import cors from 'cors';
 
 
 //env file config
@@ -20,6 +21,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 //configure express app and socket.io
 const app = express();
+app.use(cors());
 const server = createServer(app);
 const io = new Server(server);
 

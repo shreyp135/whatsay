@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
     username: {
         type: String,
         required: true,
@@ -23,7 +19,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum:['user', 'admin'],
         default: 'user'
-    }
+    },
+    isactive: {
+        type: Boolean,
+        default: true
+    },
 });
 
 const User = mongoose.model("User", userSchema);    
