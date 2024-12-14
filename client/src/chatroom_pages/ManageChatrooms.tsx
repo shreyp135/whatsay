@@ -26,6 +26,7 @@ const ManageChatrooms: React.FC = () => {
       const response = await api.get(`/chatroom/admin/`,{
         headers: { Authorization: `Bearer ${token}` },
       });
+      // console.log(response.data.chatrooms);
       setChatrooms(response.data.chatrooms);
     } catch (error) {
       console.error('Error fetching chatrooms:', error);
@@ -70,6 +71,7 @@ const ManageChatrooms: React.FC = () => {
         { name: newName },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      // console.log('Chatroom created');
       setNewName('');
       setModalOpen(false);
       fetchChatrooms();

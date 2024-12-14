@@ -24,12 +24,9 @@ function Navbar() {
             
             </div>
             <div>
-                {isToken ?  <Link to="/">Home</Link> :  <Link to="/explore">Home</Link>}
-               
+                <Link to="/">Home</Link>                
             </div>
-            {isToken ? <div>
-                <Link to="/explore">Explore</Link>
-            </div> : <></>}
+
             {isAdminUser ? <div>
                 <Link to="/manage-chatrooms">Manage Chatrooms</Link>
             </div> : <></>}

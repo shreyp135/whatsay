@@ -16,15 +16,13 @@ const chatroomSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['active', 'inactive'],
-        default: 'active'
-    },
-    ismuted: {
-        type: Boolean,
-        default: false
+        default: 'inactive',
+        required: true  
     },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     }
 });
 

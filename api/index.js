@@ -23,10 +23,15 @@ mongoose.connect(process.env.MONGO_URL)
 const app = express();
 app.use(cors());
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE']
+    }
+});
 
 //socket.io connection
-io.on('connection', websocketHandler);
+websocketHandler(io);
 
 //middlewares
 app.use(express.json());

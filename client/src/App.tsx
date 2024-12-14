@@ -4,8 +4,8 @@ import Navbar from './components/Navbar';
 import Signup  from './auth_pages/Signup';
 import Signin from './auth_pages/Signin';
 import Home from './chatroom_pages/Home';
-import Explore from './chatroom_pages/Explore';
 import ManageChatrooms from './chatroom_pages/ManageChatrooms';
+import Chatroom from './chatroom_pages/Chatroom';
 
 function App() {
 
@@ -13,10 +13,10 @@ function App() {
     <>
     <Navbar />
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<Home/>} />
+      <Route path="/chatroom/:chatroomid" element={<Chatroom />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
-      <Route path="/explore" element={<Explore />} />
       <Route path="/manage-chatrooms" element={<ManageChatrooms />} />
     </Routes>
     </>
