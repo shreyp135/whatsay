@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
+import { isAdmin } from "../utils/authCheck";
 
 
 function Navbar() {
@@ -13,6 +14,7 @@ function Navbar() {
         localStorage.removeItem("token");
         Navigate("/signin");
     }
+    const isAdminUser = isAdmin();
 
     return (
       <>
@@ -28,10 +30,10 @@ function Navbar() {
             {isToken ? <div>
                 <Link to="/explore">Explore</Link>
             </div> : <></>}
-            
-            {/* <div>
-                <Link to="/createChatroom">create</Link>
-            </div> */}
+            {isAdminUser ? <div>
+                <Link to="/manage-chatrooms">Manage Chatrooms</Link>
+            </div> : <></>}
+
             {!isToken ?  <div>
                 <Link to="/signin">Login</Link>
             </div> : <></>}

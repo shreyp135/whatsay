@@ -5,7 +5,7 @@ import Signup  from './auth_pages/Signup';
 import Signin from './auth_pages/Signin';
 import Home from './chatroom_pages/Home';
 import Explore from './chatroom_pages/Explore';
-import CreateChatroom from './chatroom_pages/CreateChatroom';
+import ManageChatrooms from './chatroom_pages/ManageChatrooms';
 
 function App() {
 
@@ -17,7 +17,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/explore" element={<Explore />} />
-      <Route path="/createChatroom" element={<CreateChatroom />} />
+      <Route path="/manage-chatrooms" element={<ManageChatrooms />} />
     </Routes>
     </>
   );

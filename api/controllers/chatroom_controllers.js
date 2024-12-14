@@ -44,6 +44,7 @@ export const getMessages = async(req, res) => {
 }
 
 export const createChatroom = async(req, res) => {
+    // console.log("hello");
     const {name} = req.body;
     const userId = req.user._id;
     try{
@@ -94,5 +95,30 @@ export const getUserChatrooms = async(req, res) => {
         res.status(200).json({chatrooms});
     }catch(err){
         res.status(500).json({error: err});
+    }
+}
+
+export const getAdminChatrooms = async(req, res) => {
+    const userId = req.user._id;
+    try{
+        const chatrooms = await Chatroom.find({created_by: userId});
+        res.status(200).json({chatrooms});
+
+    }catch(err){
+        res.status(500).json({error: err});
+    }
+}
+
+export const editChatroom = async(req, res) => {  
+    const chatroomId = req.params.chatroomId;
+    const {name} = req.body;
+    try{
+        const chatroom = await Chatroom.findById(chatroomId);
+        chatroom.name = name;
+        await chatroom.save();
+        res.status(200).json({message: "Chatroom updated successfully"});
+    }
+    catch(err){
+        res.status(500).json({message: err.message ,error: err});
     }
 }
