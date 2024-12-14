@@ -12,7 +12,9 @@ function Navbar() {
         const response = await api.get("/auth/signout");
         console.log(response.status);
         localStorage.removeItem("token");
+        localStorage.removeItem("userid");
         Navigate("/signin");
+        
     }
     const isAdminUser = isAdmin();
 

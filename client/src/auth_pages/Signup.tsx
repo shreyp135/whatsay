@@ -1,5 +1,6 @@
 import api from "../utils/api";
 import { Link, useNavigate } from "react-router-dom";
+import toast,{Toaster} from "react-hot-toast";
 
 function Signup() {
     const Navigate = useNavigate();
@@ -17,7 +18,10 @@ function Signup() {
             const response = await api.post("/auth/signup", { username, email, password });
             console.log(response.status);
             }
-            catch (err) {
+            catch (err: any) {
+                if(err.response?.status === 500) {
+                    toast.error("Internal server error");
+                }
                 console.error("Signup was not successful", err);
             }
 
@@ -39,6 +43,7 @@ function Signup() {
                 <div className=" text-3xl text-center font-medium">
                     Welcome to Whatsay !!
                 </div>
+                <Toaster/>
                 <div className=" h-[68vh] backdrop-blur-sm border rounded-xl border-gray-500 bg-white flex flex-col justify-around p-6">
                         <div className="flex flex-col gap-2">                        
                             <div className="text-2xl font-semibold">

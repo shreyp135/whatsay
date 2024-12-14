@@ -1,6 +1,7 @@
 import api from "../utils/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast,{Toaster} from "react-hot-toast";
 
 interface Chatroom {
   _id: string;
@@ -36,16 +37,22 @@ const Home: React.FC = () => {
   };
 
   const handleJoinChatroom = (chatroomId: string) => {
+    if( !userId) {
+      toast.error("Please login to join chatroom");
+      // navigate("/signin");
+      return;
+    }
     navigate(`/chatroom/${chatroomId}`);
   };
 
   return (
     <div className="h-[100vh]">
       <div className="p-6 ml-4">
-        <h1 className="text-4xl font-semibold mb-4 text-center">Chatrooms</h1>
-
+        <h1 className="text-4xl font-semibold mb-8 text-center">Chatrooms</h1>
+        <Toaster/>
         {/* Active Chatrooms */}
-        <h2 className="text-xl font-semibold mb-2">Active Chatrooms</h2>
+        <h2 className="text-xl font-semibold mb-2 ">Active Chatrooms</h2>
+        {activeChatrooms.length === 0?<div className="mt-6 ml-16"> Currently no chatrooms are active </div>: <></>}
         <ul className="w-[90%]  justify-center grid grid-cols-2 gap-4 p-2 ml-12 mb-4">
           {activeChatrooms.map((chatroom) => (
             <li

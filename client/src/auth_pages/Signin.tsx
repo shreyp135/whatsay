@@ -1,6 +1,7 @@
 // import { useState } from "react";
 import api from "../utils/api";
 import { Link, useNavigate } from "react-router-dom";
+import toast,{Toaster} from "react-hot-toast";
 
 function Signin() {
     const Navigate = useNavigate();
@@ -14,11 +15,18 @@ function Signin() {
         const password = target.password.value;
         try {
             const response = await api.post("/auth/signin", { username, password });
+            toast.success("Login successful");
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("userid", response.data.user._id);
             Navigate("/");
             }
-            catch (err) {
+            catch (err: any) {
+                if (err.response?.status === 404) {
+                    toast.error("Invalid credentials");
+                }
+                if(err.response?.status === 500) {
+                    toast.error("Error logging in");
+                }
                 console.error("Login was not successful", err);
             }
         }
@@ -31,6 +39,7 @@ function Signin() {
                 <div className=" text-3xl font-medium text-center">
                     Welcome to Whatsay !!
                 </div>
+                <Toaster/>
                 <div className=" h-[60vh] backdrop-blur-sm border rounded-xl border-gray-500 bg-white flex flex-col justify-around p-6">
                         <div className="flex flex-col gap-2">                        
                             <div className="text-2xl font-semibold">
