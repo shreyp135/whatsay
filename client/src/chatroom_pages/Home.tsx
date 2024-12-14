@@ -13,6 +13,7 @@ interface Chatroom {
 }
 
 const Home: React.FC = () => {
+  const userId = localStorage.getItem("userid");
   const [activeChatrooms, setActiveChatrooms] = useState<Chatroom[]>([]);
   const [dormantChatrooms, setDormantChatrooms] = useState<Chatroom[]>([]);
   const navigate = useNavigate();
@@ -23,10 +24,8 @@ const Home: React.FC = () => {
 
   const getChatrooms = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await api.get("/chatroom/", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      // const token = localStorage.getItem("token");
+      const response = await api.get("/chatroom/");
       const activeChatrooms = response.data.activeChatRooms;
       const dormantChatrooms = response.data.dormantChatRooms;
       setActiveChatrooms(activeChatrooms);
@@ -42,23 +41,29 @@ const Home: React.FC = () => {
 
   return (
     <div className="h-[100vh]">
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Chatrooms</h1>
+      <div className="p-6 ml-4">
+        <h1 className="text-4xl font-semibold mb-4 text-center">Chatrooms</h1>
 
         {/* Active Chatrooms */}
         <h2 className="text-xl font-semibold mb-2">Active Chatrooms</h2>
-        <ul className="mb-6">
+        <ul className="w-[90%]  justify-center grid grid-cols-2 gap-4 p-2 ml-12 mb-4">
           {activeChatrooms.map((chatroom) => (
             <li
               key={chatroom._id}
-              className="p-4 bg-green-100 rounded mb-2 cursor-pointer hover:bg-green-200"
+              className="p-4 bg-gray-100 rounded mb-2 cursor-pointer hover:bg-gray-200 hover:duration-200 border border-green-500"
               onClick={() => {handleJoinChatroom(chatroom._id)}}
             >
-              <div>
-                <span className="font-bold">{chatroom.name}</span>
-                <span className="ml-2 text-sm text-gray-600">
-                  (Created by: {chatroom.created_by.username})
-                </span>
+              <div className="flex justify-around items-center">
+                <span className="text-2xl font-semibold">{chatroom.name}</span>
+                <div className="flex flex-col">
+                  <span className="ml-2 text-sm text-gray-600">
+                    Created by: {chatroom.created_by.username}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-600">
+                    Chatroom id: {chatroom._id}
+                  </span>
+                </div>
+                <button className="text-white px-6 py-1.5 rounded-md bg-purple-400 hover:bg-purple-500 hover:duration-150">Join</button>
               </div>
             </li>
           ))}
@@ -66,19 +71,24 @@ const Home: React.FC = () => {
 
         {/* Dormant Chatrooms */}
         <h2 className="text-xl font-semibold mb-2">Dormant Chatrooms</h2>
-        <ul>
+        <ul className="w-[90%]  justify-center grid grid-cols-2 gap-4 p-2 ml-12">
           {dormantChatrooms.map((chatroom) => (
             <li
               key={chatroom._id}
-              className="p-4 bg-gray-100 rounded mb-2 cursor-pointer hover:bg-gray-200"
+              className="p-4 bg-gray-100 rounded mb-2 cursor-pointer hover:bg-gray-200 hover:duration-200"
               onClick={() => handleJoinChatroom(chatroom._id)}
             >
-              <div>
-                <span>{chatroom._id}</span>
-                <span className="font-bold">{chatroom.name}</span>
-                <span className="ml-2 text-sm text-gray-600">
-                  (Created by: {chatroom.created_by.username})
-                </span>
+              <div className="flex justify-around items-center">
+                <span className="text-2xl font-semibold">{chatroom.name}</span>
+                <div className="flex flex-col">
+                  <span className="ml-2 text-sm text-gray-600">
+                    Created by: {chatroom.created_by.id ===userId?"You": chatroom.created_by.username}
+                  </span>
+                  <span className="ml-2 text-sm text-gray-600">
+                    Chatroom id: {chatroom._id}
+                  </span>
+                </div>
+                <button className="text-white px-6 py-1.5 rounded-md bg-purple-400 hover:bg-purple-500 hover:duration-150">Join</button>
               </div>
             </li>
           ))}

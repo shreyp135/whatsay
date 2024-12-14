@@ -4,7 +4,7 @@ import { getChatrooms, getMessages, createChatroom, deleteChatroom, getChatroomI
 
 const router = express.Router();
 
-router.get("/", authMiddleware, getChatrooms);
+router.get("/", getChatrooms);
 router.get("/admin", authMiddleware, getAdminChatrooms);
 router.get("/:chatroomId/chats", authMiddleware, getMessages);
 router.get("/:chatroomId", authMiddleware, getChatroomInfo);

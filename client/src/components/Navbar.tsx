@@ -18,27 +18,27 @@ function Navbar() {
 
     return (
       <>
-        <div className=" h-[7vh] sticky top-0 backdrop-blur-sm text-white flex flex-row justify-around items-center border-b">
-            <div>
-                {isToken ?  <Link to="/">Whatsay</Link> :  <Link to="/explore">Whatsay</Link>}
+        <div className=" h-[7vh] sticky top-0 backdrop-blur-sm  text-black flex flex-row justify-between items-center border-b border-b-gray-900 px-20">
+            <div className="text-2xl font-semibold text-indigo-800">
+            <Link to="/">Whatsay</Link>
             
-            </div>
-            <div>
-                <Link to="/">Home</Link>                
-            </div>
+            </div> 
+            <div className="flex flex-row gap-24 justify-between text-lg font-semibold">
+                <div>
+                    <Link className="hover:text-purple-500 hover:duration-200" to="/">Home</Link>                
+                </div>
 
-            {isAdminUser ? <div>
-                <Link to="/manage-chatrooms">Manage Chatrooms</Link>
-            </div> : <></>}
+                {isAdminUser ? <div>
+                    <Link className="hover:text-purple-500 hover:duration-200" to="/manage-chatrooms">Manage Chatrooms</Link>
+                </div> : <></>}
 
-            {!isToken ?  <div>
-                <Link to="/signin">Login</Link>
-            </div> : <></>}
-           
-            {isToken ?  
-            <div onClick={handleClick}>
-                  Logout
-            </div> : <></>}
+                {!isToken ?  <div>
+                    <Link className="hover:text-purple-500 hover:duration-200" to="/signin">Login</Link>
+                </div> : <></>}
+            
+                {isToken ?  
+                <div className="hover:cursor-pointer hover:text-purple-500 hover:duration-200" onClick={handleClick}>Logout</div>:<></>}
+            </div>
         </div>
       </>
     );

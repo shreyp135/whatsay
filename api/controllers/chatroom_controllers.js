@@ -2,17 +2,15 @@ import Chatroom from "../models/chatroom_model.js";
 
 export const getChatrooms = async(req, res) => {
     try{
-
         const chatRooms = await Chatroom.find({})
-        .populate('users', 'id username isactive')
+        .populate('users', '_id username isactive')
         .populate("created_by", "username");
 
         const activeChatRooms = [];
         const dormantChatRooms = [];
 
         for (const chatRoom of chatRooms) {
-              const hasActiveUsers = chatRoom.users.find(user => user.isactive); 
-              if (hasActiveUsers) {
+              if (chatRoom.users && chatRoom.users.length > 0) {
                 activeChatRooms.push(chatRoom);
               } else {
                 dormantChatRooms.push(chatRoom);

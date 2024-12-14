@@ -34,23 +34,35 @@ function Signup() {
 
     return (
       <>
-        <div className="h-[95vh] text-white flex justify-center ">
-            <div className=" flex flex-col justify-evenly ">
-                <div className=" text-4xl font-medium">
+        <div className="h-[95vh] flex justify-center ">
+            <div className=" flex flex-col justify-center gap-12  w-[25%]">
+                <div className=" text-3xl text-center font-medium">
                     Welcome to Whatsay !!
                 </div>
-                <div className="h-[60vh] backdrop-blur-sm border rounded-xl border-gray-500 bg-gradient-to-r  from-sky-950 via-blue-950 to-sky-950 text-black">
-                        <form action="" className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                            <input type="text" name="username" placeholder="Username " id="" />
-                            <input type="email" name="email" placeholder="Email" id="" />
-                            <input type="password" name="password" placeholder="Password" id="" />
+                <div className=" h-[68vh] backdrop-blur-sm border rounded-xl border-gray-500 bg-white flex flex-col justify-around p-6">
+                        <div className="flex flex-col gap-2">                        
+                            <div className="text-2xl font-semibold">
+                                Signup on Whatsay
+                            </div>
+                            <div className="font-normal text-md text-gray-600">
+                                Chat with people in secured chatrooms with zero latency.
+                            </div>
+                        </div>                        
+                        <form action="" className="flex flex-col justify-between gap-2" onSubmit={handleSubmit}>
+                            <label className="font-medium" htmlFor="username">Username</label>
+                            <input className="rounded-md hover:shadow-md hover:duration-150" type="text" name="username" placeholder="abc" id="" />
+                            <label className="font-medium" htmlFor="email">Email Id</label>
+                            <input className="rounded-md hover:shadow-md hover:duration-150" type="email" name="email" placeholder="abc@abc.com" id="" />
+                            <label className="font-medium"  htmlFor="password">Password</label>
+                            <input className="rounded-md hover:shadow-md hover:duration-150" type="password" name="password" placeholder="Enter your password" id="" />
 
-                            <button type="submit">
+                            <button type="submit" className="bg-purple-400 hover:bg-purple-500 hover:duration-150 hover:shadow-md h-10 rounded-md text-white text-md font-medium mt-4">
                                 Signup
                             </button>
                         </form>
-
-                        <Link to="/signin"> signin</Link>
+                        <div>Already have an account?
+                            <Link className="text-purple-500" to="/signin"> Login</Link>
+                        </div>
                 </div>
             </div>
            
