@@ -20,21 +20,27 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getChatrooms();
-  }, []);
+    const fetchChatrooms = async () => {
+      try {
+        const response = await api.get("/chatroom/");
+        const activeChatrooms = response.data.activeChatRooms;
+        const dormantChatrooms = response.data.dormantChatRooms;
+        setActiveChatrooms(activeChatrooms);
+        setDormantChatrooms(dormantChatrooms);
+        } catch (error) {
+        console.error("Error fetching chatrooms:", error);
+      }
+    };
+  
+    fetchChatrooms();
 
-  const getChatrooms = async () => {
-    try {
-      // const token = localStorage.getItem("token");
-      const response = await api.get("/chatroom/");
-      const activeChatrooms = response.data.activeChatRooms;
-      const dormantChatrooms = response.data.dormantChatRooms;
-      setActiveChatrooms(activeChatrooms);
-      setDormantChatrooms(dormantChatrooms);
-    } catch (err) {
-      console.error("Error fetching chatrooms", err);
-    }
-  };
+    const intervalId = setInterval(() => {
+      fetchChatrooms();
+    }, 1000); 
+    return () => clearInterval(intervalId);
+
+  }, []);
+  
 
   const handleJoinChatroom = (chatroomId: string) => {
     if( !userId) {

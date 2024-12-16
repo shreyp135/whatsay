@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import api from "../utils/api";
+import scrollToBottom from "../utils/scripts";
 
 interface Message {
   _id: string;
@@ -28,6 +29,10 @@ function Chatroom() {
   const [chatroomName, setChatroomName] = useState<string>("");
 
   useEffect(() => {
+    scrollToBottom();
+  }, [messages]); 
+
+  useEffect(() => {
     const fetchChats = async () => {
       try {
         const response = await api.get(`/chatroom/${chatroomid}/chats`,{
@@ -40,7 +45,6 @@ function Chatroom() {
         console.error("Failed to fetch chats:", error);
       }
     };
-
     fetchChats();
   }, [chatroomid]);
 
@@ -50,18 +54,51 @@ function Chatroom() {
     console.log(userId);
     console.log(chatroomid);  
 
+    const interval = setInterval(() => {
+      newSocket.emit("ping");
+    }, 5000); 
+    newSocket.on("pong", () => {
+      console.log("Server is connected and active");
+    });
+
+
     newSocket.emit("join_room", { chatroomid, userId });
 
     newSocket.on("receive_message", (message: Message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
+      
     });
 
-    newSocket.on("updated_users", (users: User[]) => {
+    newSocket.on("updated_users", (users: User[], username: string,status: boolean ) => {
       setActiveUsers(users);
+      if(status){
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            _id: "200",
+            userId: "",
+            username: "",
+            text: `${username} joined the room`,
+            timestamp: new Date().toISOString(),
+          },
+        ]);
+    }else{
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          _id: "404",
+          userId: "",
+          username: "",
+          text: `${username} left the room`,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+    }
     });
 
     return () => {
       newSocket.emit("leave_room", { chatroomid, userId });
+      clearInterval(interval);
       newSocket.disconnect();
     };
   }, [userId, chatroomid]);
@@ -76,8 +113,11 @@ function Chatroom() {
     if (socket) {
       socket.emit("leave_room", { chatroomid, userId });
       socket.disconnect();
+      
     }
-    navigate("/");
+     navigate("/");
+
+      
   };
 
   return (
@@ -113,22 +153,40 @@ function Chatroom() {
           <h1 className="text-l font-normal">ID: {chatroomid}</h1>
         </div>
 
-        <div className="h-[75vh] overflow-auto [&::-webkit-scrollbar]:hidden border p-4">
+        <div className="h-[75vh] overflow-auto [&::-webkit-scrollbar]:hidden border p-4" id="chatbox">
   {messages.map((msg) => (
     <div
       key={msg._id}
       className={`w-full flex ${
-        msg.userId === userId ? "justify-end" : "justify-start"
+        msg._id === "200" || msg._id === "404"
+          ? "justify-center"
+          : msg.userId === userId
+          ? "justify-end"
+          : "justify-start"
       }`}
     >
-      <div className="mb-3 bg-violet-300 w-fit p-1 rounded-md min-w-[15%] ml-4">
-        <div className="text-xs text-gray-700 text-left ml-2 font-semibold">
-          {msg.userId === userId ? "You" : msg.username}
-        </div>
-        <div className="ml-6 mt-1">{msg.text}</div>
-        <div className="text-xs text-right text-gray-500">
-          {new Date(msg.timestamp).toLocaleTimeString()}
-        </div>
+      <div
+        className={`mb-3 ${
+          msg._id === "200" || msg._id === "404"
+            ? "bg-gray-200 text-center"
+            : "bg-violet-300"
+        } w-fit p-1 rounded-md min-w-[15%] ml-4`}
+      >
+        {msg._id === "200" || msg._id === "404" ? (
+          <div className="text-xs text-gray-700 font-semibold">
+            {msg.text}
+          </div>
+        ) : (
+          <>
+            <div className="text-xs text-gray-700 text-left ml-2 font-semibold">
+              {msg.userId === userId ? "You" : msg.username}
+            </div>
+            <div className="ml-6 mt-1">{msg.text}</div>
+            <div className="text-xs text-right text-gray-500">
+              {new Date(msg.timestamp).toLocaleTimeString()}
+            </div>
+          </>
+        )}
       </div>
     </div>
   ))}
@@ -144,6 +202,7 @@ function Chatroom() {
     onKeyDown={(e) => {
       if (e.key === "Enter" && currmessage.trim()) {
         handleSendMessage();
+        
       }
     }}
     placeholder="Type a message..."

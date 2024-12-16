@@ -39,12 +39,17 @@ const websocket_handler = (io) => {
 
                 socket.join(chatroomid);
                 console.log(`Socket ${socket.id} joined room ${chatroomid}`);
-
-                io.to(chatroomid).emit('updated_users', chatroom.users);
+                const status = true;
+                io.to(chatroomid).emit('updated_users', chatroom.users, user.username,status);
             } catch (err) {
                 console.error('Error in join_room:', err);
             }
         });
+
+        socket.on("ping", () => {
+            socket.emit("pong");
+          });
+        
         
         //sending message
         socket.on('send_message', async ({ chatroomid, userId, text }) => {
@@ -110,8 +115,9 @@ const websocket_handler = (io) => {
 
                 socket.leave(chatroomid);
                 console.log(`Socket ${socket.id} left room ${chatroomid}`);
+                const status = false;
 
-                io.to(chatroomid).emit('updated_users', chatroom.users);
+                io.to(chatroomid).emit('updated_users', chatroom.users, user.username,status);
             } catch (err) {
                 console.error('Error in leave_room:', err);
             }

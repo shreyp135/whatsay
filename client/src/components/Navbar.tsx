@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import { isAdmin } from "../utils/authCheck";
-
+import toast,{Toaster} from "react-hot-toast";
 
 function Navbar() {
     const Navigate = useNavigate();
@@ -10,6 +10,7 @@ function Navbar() {
 
     const handleClick = async() => {
         const response = await api.get("/auth/signout");
+        if(response.status === 200) toast.success("Logged out successfully");
         console.log(response.status);
         localStorage.removeItem("token");
         localStorage.removeItem("userid");
@@ -42,6 +43,7 @@ function Navbar() {
                 <div className="hover:cursor-pointer hover:text-purple-500 hover:duration-200" onClick={handleClick}>Logout</div>:<></>}
             </div>
         </div>
+        <Toaster/>
       </>
     );
   };
