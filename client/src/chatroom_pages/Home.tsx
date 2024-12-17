@@ -52,7 +52,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="h-[100vh]">
+    <div className="h-[100vh] ">
       <div className="p-6 ml-4">
         <h1 className="text-4xl font-semibold mb-8 text-center">Chatrooms</h1>
         <Toaster/>
@@ -76,7 +76,7 @@ const Home: React.FC = () => {
                     Chatroom id: {chatroom._id}
                   </span>
                 </div>
-                <button className="text-white px-6 py-1.5 rounded-md bg-purple-400 hover:bg-purple-500 hover:duration-150">Join</button>
+                <button className="text-white px-6 py-1.5 rounded-md bg-purple-400 hover:bg-purple-500 hover:duration-150  font-semibold">Join</button>
               </div>
             </li>
           ))}
@@ -101,7 +101,7 @@ const Home: React.FC = () => {
                     Chatroom id: {chatroom._id}
                   </span>
                 </div>
-                <button className="text-white px-6 py-1.5 rounded-md bg-purple-400 hover:bg-purple-500 hover:duration-150">Join</button>
+                <button className="text-white px-6 py-1.5 rounded-md bg-purple-400 hover:bg-purple-500 hover:duration-150 font-semibold">Join</button>
               </div>
             </li>
           ))}

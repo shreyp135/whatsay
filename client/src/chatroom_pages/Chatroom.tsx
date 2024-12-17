@@ -49,7 +49,7 @@ function Chatroom() {
   }, [chatroomid]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:9000"); 
+    const newSocket = io("https://whatsay.onrender.com"); 
     setSocket(newSocket);
     console.log(userId);
     console.log(chatroomid);  
