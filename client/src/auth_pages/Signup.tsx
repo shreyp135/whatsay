@@ -29,6 +29,7 @@ function Signup() {
         try {
             const response = await api.post("/auth/signin", { username, password });
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("userid", response.data.userid);
             Navigate("/");
             }
             catch (err) {
