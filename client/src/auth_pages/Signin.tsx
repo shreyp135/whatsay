@@ -2,10 +2,16 @@
 import api from "../utils/api";
 import { Link, useNavigate } from "react-router-dom";
 import toast,{Toaster} from "react-hot-toast";
+import { TailSpin } from "react-loader-spinner";
+import { useState } from "react";
 
 function Signin() {
     const Navigate = useNavigate();
+    const [loading, setLoading] = useState<boolean>(false);
+
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+        toast("Logging in, please wait...")
+        setLoading(true);
         e.preventDefault();
         const target = e.target as typeof e.target & {
             username: { value: string };
@@ -15,7 +21,10 @@ function Signin() {
         const password = target.password.value;
         try {
             const response = await api.post("/auth/signin", { username, password });
-            toast.success("Login successful");
+            toast.success("Login successful",{
+                duration: 5000,
+                position: "top-center",
+            });
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("userid", response.data.user._id);
             Navigate("/");
@@ -29,6 +38,7 @@ function Signin() {
                 }
                 console.error("Login was not successful", err);
             }
+            setLoading(false);
         }
     
 
@@ -55,8 +65,8 @@ function Signin() {
                             <label className="font-medium" htmlFor="password">Password</label>
                             <input className="rounded-md hover:shadow-md hover:duration-150" type="password" name="password" placeholder="Enter your password" id="" />
 
-                            <button type="submit" className="bg-purple-400 hover:bg-purple-500 hover:duration-150 hover:shadow-md h-10 rounded-md text-white text-md font-medium mt-4">
-                                Login
+                            <button type="submit" className="bg-purple-400 hover:bg-purple-500 hover:duration-150 hover:shadow-md h-10 rounded-md text-center text-white text-md font-medium mt-4 flex justify-center items-center">
+                               {loading ? <TailSpin height={25} width={80} radius={1} color="#ffffff" /> : "Login"}  
                             </button>
                         </form>
                         <div>Don't have an account?

@@ -1,11 +1,16 @@
 import api from "../utils/api";
 import { Link, useNavigate } from "react-router-dom";
 import toast,{Toaster} from "react-hot-toast";
+import { useState } from "react";
+import { TailSpin } from "react-loader-spinner";
 
 function Signup() {
     const Navigate = useNavigate();
+    const [loading, setLoading] = useState<boolean>(false);
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
+        toast("Signing you up, please wait...");
         const target = e.target as typeof e.target & {
             username: { value: string };
             email: { value: string };
@@ -17,24 +22,31 @@ function Signup() {
         try {
             const response = await api.post("/auth/signup", { username, email, password });
             console.log(response.status);
+            if(response.status === 201) {
+                toast.success("Signup successful, please login with your credentials",{
+                    duration: 5000,
+                    position: "top-center",
+                });
+                Navigate("/signin");
             }
+        }
             catch (err: any) {
                 if(err.response?.status === 500) {
                     toast.error("Internal server error");
                 }
                 console.error("Signup was not successful", err);
             }
-
+            setLoading(false);
         //signing in the user
-        try {
-            const response = await api.post("/auth/signin", { username, password });
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("userid", response.data.userid);
-            Navigate("/");
-            }
-            catch (err) {
-                console.error("Login was not successful", err);
-            }
+        // try {
+        //     const response = await api.post("/auth/signin", { username, password });
+        //     localStorage.setItem("token", response.data.token);
+        //     localStorage.setItem("userid", response.data.userid);
+        //     Navigate("/");
+        //     }
+        //     catch (err) {
+        //         console.error("Login was not successful", err);
+        //     }
         }    
 
     return (
@@ -62,8 +74,8 @@ function Signup() {
                             <label className="font-medium"  htmlFor="password">Password</label>
                             <input className="rounded-md hover:shadow-md hover:duration-150" type="password" name="password" placeholder="Enter your password" id="" />
 
-                            <button type="submit" className="bg-purple-400 hover:bg-purple-500 hover:duration-150 hover:shadow-md h-10 rounded-md text-white text-md font-medium mt-4">
-                                Signup
+                            <button type="submit" className="bg-purple-400 hover:bg-purple-500 hover:duration-150 hover:shadow-md h-10 rounded-md text-white text-md font-medium mt-4 flex justify-center items-center">
+                            {loading ? <TailSpin height={25} width={80} radius={1} color="#ffffff" /> : "Signup"}  
                             </button>
                         </form>
                         <div>Already have an account?
