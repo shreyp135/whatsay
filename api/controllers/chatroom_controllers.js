@@ -57,8 +57,8 @@ export const createChatroom = async(req, res) => {
     const {name} = req.body;
     const userId = req.user.id;
     try{
-        const chatroom = new Chatroom({name, created_by: userId});
-        await chatroom.save();
+        const chatroom = new Chatroom({name, created_by: userId, created_at: new Date().toISOString()});
+        await chatroom.save(); 
         res.status(201).json({chatroom});
     }catch(err){
         res.status(500).json({message:err,error: err});
@@ -89,7 +89,20 @@ export const getChatroomInfo = async(req, res) => {
 export const getAdminChatrooms = async(req, res) => {
     const userId = req.user.id;
     try{
-        const chatrooms = await Chatroom.find({created_by: userId});
+        const chatrooms = await Chatroom.find({created_by: userId}).populate('users', '_id username isactive').populate("created_by", "username");  
+        // chatrooms.forEach(chatroom => {
+        //     const date = new Date(chatroom.created_at);
+        //     // chatroom.created_at = date.toDateString("en-GB");
+        //     // console.log(chatroom.created_at);
+        // });
+        chatrooms.forEach(chatroom => {
+            if(chatroom.users.length > 0){  
+                chatroom.status = true;
+            }else{
+                chatroom.status = false;
+            }
+        });
+
         res.status(200).json({chatrooms});
 
     }catch(err){

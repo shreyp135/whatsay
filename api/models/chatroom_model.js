@@ -14,14 +14,17 @@ const chatroomSchema = new mongoose.Schema({
         ref: 'Message'
     }],
     status: {
-        type: String,
-        enum: ['active', 'inactive'],
-        default: 'inactive',
+        type: Boolean,
+        default: false,
         required: true  
     },
     created_by: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true
+    },
+    created_at: {
+        type: Date,
         required: true
     }
 });
